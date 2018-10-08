@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+  
+{% block nav-home %}<a class="active" href="/">Home</a>{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript"
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$']],
+    preview: ["[math]"],
+    processEscapes: true
+  }
+});
+ </script>
+
+<h1>Gravitational Wave Calculations</h1>
+<body>
+
+<!-- Create anchors for each calculation to find what you need easier -->
+<div></div><a href="#chirpMass">Chirp Mass & Symmetric Mass Ratio</a>
+<div></div><a href="#gwLuminosity">Gravitational Wave Luminosity</a>
+<div></div><a href="#lumDistance">Luminosity Distance</a>
+<div></div><a href="#spins">Aligned and In-Plane Spins</a>
+<div></div><a href="#timeBand">Time to merger</a>
+<div></div><a href="#orbitalSep">Orbital Separation</a>
+<div></div><a href="#schwarzRad">Schwarzschild Radius</a>
+
+
+
+<br></br>
+<!-- Chirp Mass & Symmetric Mass Ratio-->
+<a name="chirpMass"></a>
+<form id="chirpMass" action="">
+<fieldset>
+	<legend>Chirp Mass and Symmetric Mass Ratio</legend>
+	
+$$\mathcal{M}_{c} = \frac{(M_1 M_2)^{3/5}}{(M_1+M_2)^{1/5}}\qquad\eta=\frac{M_1M_2}{(M_1+M_2)^2}$$
+	
+	<p>
+		<label for="M1">$M_{1}\ (M_{\odot})$</label>
+		<input id="M1" name="M1" type="float" />
+	</p>
+	<p>
+		<label for="M2">$M_{2}\ (M_{\odot})$</label>
+		<input id="M2" name="M2" type="float" />
+	</p>
+	<p>
+		<input type="submit" value="Calculate chirp mass and sym. mass ratio" />
+		or
+		<input type="reset" value="Reset" />
+	</p>
+	<p>
+		<label for="M_chirp">$\mathcal{M}_{c}\ (M_{\odot})$</label>
+		<input id="M_chirp" name="M_chirp" type="float" />
+    </p>
+    <p>
+        <label for="eta">$\eta$</label>
+		<input id="eta" name="eta" type="float" />
+	</p>
+</fieldset>
+</form>
+
+<script>
+(function () {
+	function calculateChirpMass(M1, M2) {
+		M1 = parseFloat(M1);
+        M2 = parseFloat(M2);
+		Mc = Math.pow((M1*M2),(3/5)) / Math.pow((M1+M2),(1/5));
+		return Mc.toFixed(2)
+	}
+	function calculateEta(M1, M2) {
+		M1 = parseFloat(M1);
+        M2 = parseFloat(M2);
+        eta = (M1*M2)/Math.pow((M1 + M2), 2);
+		return eta.toFixed(5)
+	}
+
+	var chirpMass = document.getElementById("chirpMass");
+	if (chirpMass) {
+		chirpMass.onsubmit = function () {
+			this.M_chirp.value = calculateChirpMass(this.M1.value, this.M2.value);
+			this.eta.value = calculateEta(this.M1.value, this.M2.value);
+			return false;
+		};
+	}
+}());
+</script>
+
+
+
+<br></br>
+<!-- Gravitational Wave Luminosity -->
+<a name="gwLuminosity"></a>
+<form id="gwLuminosity" action="">
+<fieldset>
+	<legend>Gravitational Wave Luminosity</legend>
+	
+
+$$L_{GW} = \frac{128}{5}\frac{c^{5}}{G}\Omega^{6}M^{2}R^{4}$$
+$$Assuming\ equal\ mass\ (M_{1}=M_{2}=M,\ so\ R_{1}=R_{2}=R)\ and\ circular\ orbit$$
+	
+	<p>
+		<label for="M">$M=M_{1}=M_{2}\ (M_{\odot}$)</label>
+		<input id="M" name="M" type="float" />
+	</p>
+	<p>
+		<label for="f">GW frequency (Hz)</label>
+		<input id="f" name="f" type="float" />
+	</p>
+	<p>
+		<input type="submit" value="Calculate GW luminosity" />
+		or
+		<input type="reset" value="Reset" />
+	</p>
+	<p>
+		<label for="L">Luminosity (W)</label>
+		<input id="L" name="L" type="float" />
+	</p>
+</fieldset>
+</form>
+
+
+<script>
+(function () {
+	function calculateGWLuminosity(M, f) {
+		var G = 6.67e-11;
+		var c = 3e8;
+		M = parseFloat(M);
+        f = parseFloat(f);  // Note: f_GW = 2*f_orb
+        R = Math.pow(2*G*M/Math.pow(f*Math.PI,2), 1/3);
+        O = 4*Math.PI*f;  // Note: f_GW = 2*f_orb;
+		L = (128/5)*(Math.pow(c,5)/G)*Math.pow(O,6)*Math.pow(M,2)*Math.pow(R,4);
+		return L.toPrecision(3)
+	}
+
+	var gwLuminosity = document.getElementById("gwLuminosity");
+	if (gwLuminosity) {
+		gwLuminosity.onsubmit = function () {
+			this.L.value = calculateGWLuminosity(this.M.value, this.f.value);
+			return false;
+		};
+	}
+}());
+</script>
+
+
+
+<br></br>
+<!-- Luminosity Distance -->
+<a name="lumDistance"></a>
+<form id="lumDistance" action="">
+<fieldset>
+	<legend>Luminosity Distance</legend>
+	
+
+$$L_{GW} =\  \sim\frac{c^{3}d_{L}^{2}}{4G}|\dot{h}|^{2}\ \sim\ \frac{c^{5}}{4G}\Big{(}\frac{\omega_{GW}d_{L}h|_{max}}{c}\Big{)}^{2}$$
+$$d_{L}\ \sim\ 45000 Mpc\frac{Hz}{f_{GW_{max}}}\frac{10^{-21}}{h_{max}}$$
+	
+	<p>
+		<label for="h">Peak Strain</label>
+		<input id="h" name="h" type="float" />
+	</p>
+	<p>
+		<label for="f">Peak GW frequency (Hz)</label>
+		<input id="f" name="f" type="float" />
+	</p>
+	<p>
+		<input type="submit" value="Calculate Luminosity Distance" />
+		or
+		<input type="reset" value="Reset" />
+	</p>
+	<p>
+		<label for="dL">Luminosity Distance (Mpc)</label>
+		<input id="dL" name="dL" type="float" />
+	</p>
+</fieldset>
+</form>
+
+
+<script>
+(function () {
+	function calculateLumDistance(h, f) {
+		h = parseFloat(h);
+        f = parseFloat(f);
+		dL = 45000*1e-21*(1/f)*(1/h);
+		return dL.toFixed(2)
+	}
+
+	var lumDistance = document.getElementById("lumDistance");
+	if (lumDistance) {
+		lumDistance.onsubmit = function () {
+			this.dL.value = calculateLumDistance(this.h.value, this.f.value);
+			return false;
+		};
+	}
+}());
+</script>
+
+
+
+<br></br>
+<!-- Aligned and In-Plane Spins-->
+<a name="spins"></a>
+<form id="spins" action="">
+<fieldset>
+	<legend>Aligned and In-Plane Spins</legend>
+	
+$$\chi_{eff} = \frac{M_{1} * \vec{S_{1}} + M_{2} * \vec{S_{2}}}{M_{1} + M_{2}} \cdot \frac{\vec{L}}{|L|} = \frac{M_{1} * S_{1z} + M_{2} * S_{2z}}{M_{1} + M_{2}} = \frac{M_{1}S_{1}cos(\theta_{1}) + M_{2}S_{2}cos(\theta_{2})}{M_{1} + M_{2}}$$
+
+$$\chi_{P} = \frac{M_{1} * \vec{S_{1}} + M_{2} * \vec{S_{2}}}{M_{1} + M_{2}} \times \frac{\vec{L}}{|L|} = \frac{M_{1} * \sqrt{S_{1x}^{2}+S_{1y}^{2}} + M_{2} * \sqrt{S_{2x}^{2}+S_{2y}^{2}}}{M_{1} + M_{2}} = \frac{M_{1}S_{1}sin(\theta_{1}) + M_{2}S_{2}sin(\theta_{2})}{M_{1} + M_{2}}$$
+	
+	<p>
+		<label for="M1">$M_{1}\ (M_{\odot})$</label>
+		<input id="M1" name="M1" type="float" />
+	</p>
+	<p>
+		<label for="M2">$M_{2}\ (M_{\odot})$</label>
+		<input id="M2" name="M2" type="float" />
+	</p>
+	<p>
+		<label for="s1">$S_{1}\ (0-1)$</label>
+		<input id="s1" name="s1" type="float" />
+	</p>
+	<p>
+		<label for="s2">$S_{2}\ (0-1)$</label>
+		<input id="s2" name="s2" type="float" />
+	</p>
+	<p>
+		<label for="theta1">$\theta_{1}\ (rad)$</label>
+		<input id="theta1" name="theta1" type="float" />
+	</p>
+	<p>
+		<label for="theta2">$\theta_{2}\ (rad)$</label>
+		<input id="theta2" name="theta2" type="float" />
+	</p>
+	<p>
+		<input type="submit" value="Calculate aligned and in-plane spins" />
+		or
+		<input type="reset" value="Reset" />
+	</p>
+	<p>
+		<label for="chi_a">$\chi_{a}$</label>
+		<input id="chi_a" name="chi_a" type="float" />
+    </p>
+    <p>
+        <label for="chi_p">$\chi_{p}$</label>
+		<input id="chi_p" name="chi_p" type="float" />
+	</p>
+</fieldset>
+</form>
+
+<script>
+(function () {
+	function calculateChi_a(M1, M2, s1, s2, theta1, theta2) {
+		m1 = parseFloat(M1);
+        m2 = parseFloat(M2);
+        s1 = parseFloat(s1);
+        s2 = parseFloat(s2);
+        t1 = parseFloat(theta1)
+        t2 = parseFloat(theta2)
+		chi_a = (m1*s1*Math.cos(t1)+m2*s2*Math.cos(t2)) / (m1+m2);
+		return chi_a.toFixed(2)
+	}
+	function calculateChi_p(M1, M2, s1, s2, theta1, theta2) {
+		m1 = parseFloat(M1);
+        m2 = parseFloat(M2);
+        s1 = parseFloat(s1);
+        s2 = parseFloat(s2);
+        t1 = parseFloat(theta1)
+        t2 = parseFloat(theta2)
+		chi_p = (m1*s1*Math.sin(t1)+m2*s2*Math.sin(t2)) / (m1+m2);
+		return chi_p.toFixed(2)
+	}
+
+	var spins = document.getElementById("spins");
+	if (spins) {
+		spins.onsubmit = function () {
+			this.chi_a.value = calculateChi_a(this.M1.value, this.M2.value, this.s1.value, this.s2.value, this.theta1.value, this.theta2.value);
+			this.chi_p.value = calculateChi_p(this.M1.value, this.M2.value, this.s1.value, this.s2.value, this.theta1.value, this.theta2.value);
+			return false;
+		};
+	}
+}());
+</script>
+
+<br></br>
+<!-- Time in band -->
+<a name="timeBand"></a>
+<form id="timeBand" action="">
+<fieldset>
+	<legend>Time in Band</legend>
+	
+
+$$t_{merg} = 2.18 \left(\frac{1.21}{\mathcal{M}_{c}}\right)^{5/3} \left(\frac{100}{f_{\textrm{low}}}\right)^{8/3}$$
+	
+	<p>
+		<label for="Mc">$\mathcal{M}_{c}\ (M_{\odot}$)</label>
+		<input id="Mc" name="Mc" type="float" />
+	</p>
+	<p>
+		<label for="f_low">f_low (Hz)</label>
+		<input id="f_low" name="f_low" type="float" />
+	</p>
+	<p>
+		<input type="submit" value="Calculate time to merger from a given starting frequency" />
+		or
+		<input type="reset" value="Reset" />
+	</p>
+	<p>
+		<label for="t_band">Time in Band (s)</label>
+		<input id="t_band" name="t_band" type="float" />
+	</p>
+</fieldset>
+</form>
+
+
+<script>
+(function () {
+	function calculateTimeBand(Mc, f_low) {
+		Mc = parseFloat(Mc);
+        f_low = parseFloat(f_low);
+		t_band = 2.18 * Math.pow((1.21 / Mc),(5/3)) * Math.pow((100 / f_low),(8/3));
+		return t_band.toFixed(2)
+	}
+
+	var timeBand = document.getElementById("timeBand");
+	if (timeBand) {
+		timeBand.onsubmit = function () {
+			this.t_band.value = calculateTimeBand(this.Mc.value, this.f_low.value);
+			return false;
+		};
+	}
+}());
+</script>
+
+
+
+<br></br>
+<!-- Orbital Separation -->
+<a name="orbitalSep"></a>
+<form id="orbitalSep" action="">
+<fieldset>
+	<legend>Orbital Separation (Keplerian)</legend>
+	
+
+$$a = \Big{(}\frac{G(M_{1}+M_{2})}{4\pi^{2}f^{2}}\Big{)}^{1/3}$$
+	
+	<p>
+		<label for="M1">$M_{1}\ (M_{\odot}$)</label>
+		<input id="M1" name="M1" type="float" />
+	</p>
+	<p>
+		<label for="M2">$M_{2}\ (M_{\odot}$)</label>
+		<input id="M2" name="M2" type="float" />
+	</p>
+	<p>
+		<label for="f">GW frequency (Hz)</label>
+		<input id="f" name="f" type="float" />
+	</p>
+	<p>
+		<input type="submit" value="Calculate Orbital Separation" />
+		or
+		<input type="reset" value="Reset" />
+	</p>
+	<p>
+		<label for="a">Orbital Separation (km)</label>
+		<input id="a" name="a" type="float" />
+	</p>
+</fieldset>
+</form>
+
+
+<script>
+(function () {
+	function calculateOrbitalSep(M1,M2,f) {
+		var G = 6.67e-11;
+		M1 = parseFloat(M1) * 2.0 * Math.pow(10, 30);
+		M2 = parseFloat(M2) * 2.0 * Math.pow(10, 30);
+		f = parseFloat(f);  // Note: f_GW = 2*f_orb
+		a = Math.pow(G*(M1+M2)/Math.pow(f*Math.PI,2), 1/3);
+		return (a/1000).toFixed(2)
+	}
+
+	var orbitalSep = document.getElementById("orbitalSep");
+	if (orbitalSep) {
+		orbitalSep.onsubmit = function () {
+			this.a.value = calculateOrbitalSep(this.M1.value, this.M2.value, this.f.value);
+			return false;
+		};
+	}
+}());
+</script>
+
+</body>
+</html>
+
+
+
+<br></br>
+<!-- Schwarzschild Radius -->
+<a name="schwarzRad"></a>
+<form id="schwarzRad" action="">
+<fieldset>
+	<legend>Schwarzschild Radius</legend>
+	
+
+$$R_{s} = \frac{2GM}{c^{2}} = 2.95\frac{M}{M_{\odot}}\ (km)$$
+	
+	<p>
+		<label for="M">$M\ (M_{\odot}$)</label>
+		<input id="M" name="M" type="float" />
+	</p>
+	<p>
+		<input type="submit" value="Calculate Schwarzschild Radius" />
+		or
+		<input type="reset" value="Reset" />
+	</p>
+	<p>
+		<label for="Rs">Schwarzschild Radius (km)</label>
+		<input id="Rs" name="Rs" type="float" />
+	</p>
+</fieldset>
+</form>
+
+
+<script>
+(function () {
+	function calculateSchwarzRad(M) {
+		var G = 6.673e-11;
+		var c = 3e8;
+		M = parseFloat(M) * 2.0e30;
+		Rs = 2 * G * M / Math.pow(c,2);
+		return (Rs/1000).toFixed(2)
+	}
+
+	var schwarzRad = document.getElementById("schwarzRad");
+	if (schwarzRad) {
+		schwarzRad.onsubmit = function () {
+			this.Rs.value = calculateSchwarzRad(this.M.value);
+			return false;
+		};
+	}
+}());
+</script>
+
+</body>
+{% endblock %}

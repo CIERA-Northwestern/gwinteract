@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for key, value in results.items %}
+    <p>{{ key }}</p>
+    {% for k, v in value.items %}
+        {{ k }}: {{ v }} <br/>
+    {% endfor %}
+{% endfor %}
+
+{% endblock %}
