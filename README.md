@@ -1,5 +1,5 @@
-# gravityspytools
-Django Web App Hosted at gravityspytools.ciera.northwestern.edu
+# gwinteract
+Django Web App Hosted at https://gwsci.ciera.northwestern.edu
 
 # Python Packges needed
 
@@ -8,4 +8,3 @@ Django Web App Hosted at gravityspytools.ciera.northwestern.edu
  * sqlalchemy
  * psycopg2
  * pandas
- * panoptes_client (HEAD: git+git://github.com/zooniverse/panoptes-python-client.git)
