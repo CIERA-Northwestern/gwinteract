@@ -40,13 +40,18 @@ setup_requires = [
     'pytest-runner',
 ]
 install_requires = [
-    'django',
-    'gwpy',
-    'django-sslserver',
-    'psycopg2-binary',
-    'sqlalchemy',
-    'pandas',
-    'seaborn',
+    'numpy >= 1.7.1',
+    'scipy >= 0.12.1',
+    'matplotlib >= 1.2.0, != 2.1.0, != 2.1.1',
+    'configparser',
+    'gwpy >= 0.12',
+    'pandas >= 0.22 ; python_version >= \'3.5\'',
+    'pandas < 0.21 ; python_version == \'3.4\'',
+    'pandas >= 0.22 ; python_version == \'2.7\'',
+    'django >= 1.11.3',
+    'psycopg2-binary >= 2.7.5',
+    'sqlalchemy >= 1.2.12',
+    'seaborn >= 0.9.0',
 ]
 
 # -- run setup ----------------------------------------------------------------
