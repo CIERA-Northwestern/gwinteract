@@ -52,6 +52,7 @@ install_requires = [
     'psycopg2-binary >= 2.7.5',
     'sqlalchemy >= 1.2.12',
     'seaborn >= 0.9.0',
+    'ligo-gracedb >= 2.0.0',
 ]
 
 # -- run setup ----------------------------------------------------------------
