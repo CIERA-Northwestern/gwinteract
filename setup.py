@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) Scott Coughlin (2018)
 #
-# This file is part of the gravityspytools django webapp.
+# This file is part of the gwinteract django webapp.
 
-"""Setup the gravityspytools package
+"""Setup the gwinteract package
 """
 
 from __future__ import print_function
@@ -19,10 +19,10 @@ import os.path
 from setuptools import (setup, find_packages)
 
 # set basic metadata
-PACKAGENAME = 'gravityspytools'
-DISTNAME = 'gravityspytools'
+PACKAGENAME = 'gwinteract'
+DISTNAME = 'gwinteract'
 AUTHOR = 'Scott Coughlin'
-AUTHOR_EMAIL = 'scottcouhlin2014@u.northwestern.edu'
+AUTHOR_EMAIL = 'scottcoughlin2014@u.northwestern.edu'
 LICENSE = 'BSD 3 LICENSE'
 
 cmdclass = {}
@@ -46,6 +46,7 @@ install_requires = [
     'psycopg2-binary',
     'sqlalchemy',
     'pandas',
+    'seaborn',
 ]
 
 # -- run setup ----------------------------------------------------------------
@@ -56,7 +57,7 @@ setup(name=DISTNAME,
       provides=[PACKAGENAME],
       version=__version__,
       description='A Django webapp providing extra gravityspy tools.',
-      url='https://gravityspytools.ciera.northwestern.edu/',
+      url='https://gwinteract.ciera.northwestern.edu/',
       long_description=None,
       author=AUTHOR,
       author_email=AUTHOR_EMAIL,
