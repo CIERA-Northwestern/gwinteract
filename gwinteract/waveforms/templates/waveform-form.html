@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% block nav-search %}<a class="active" href="/waveforms/">Generate Waveforms</a>{% endblock %}
+<h1>Generate Waveforms</h1>
+
+<form action="/waveforms/waveforms/" method="get" style="display: inline;">
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<fieldset>
+{% for field in form.visible_fields %}
+    <label>
+    {{ field.label }} : {{ field }}
+    </label>
+{% endfor %}
+</fieldset>
+
+<input type="submit" value="Generate Waveforms" />
+
+</form>
+{% endblock %}
