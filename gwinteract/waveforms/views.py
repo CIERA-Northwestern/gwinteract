@@ -8,12 +8,14 @@ import io
 
 import numpy
 import matplotlib
-matplotlib.use("agg")
+matplotlib.rc("text", usetex = True)
+#matplotlib.use("agg")
 from matplotlib import pyplot
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 ####### Waveform Generation
 # Adapted from `eventgen.py` in `gw_event_gen`
+import lal
 import lalsimulation
 
 _defaults = {
@@ -31,16 +33,16 @@ def gen_waveform(event_params, flow=10.0, deltaf=0.125, fhigh=2048., fref=10.,
     eprm = _defaults.copy()
     eprm.update(event_params)
     
-    freq_ar = numpy.linspace(flow, fhigh + deltaf, deltaf)
+    freq_ar = numpy.arange(0, fhigh + deltaf, deltaf)
     params = None
     hp, hx = lalsimulation.SimInspiralFD(
                 # Masses
-                eprm.mass1 * lal.MSUN_SI, eprm.mass2 * lal.MSUN_SI, \
+                eprm["m1"] * lal.MSUN_SI, eprm["m2"] * lal.MSUN_SI, \
                 # Spins
-                eprm.spin1x, eprm.spin1y, eprm.spin1z, \
-                eprm.spin2x, eprm.spin2y, eprm.spin2z, \
+                eprm["spin1x"], eprm["spin1y"], eprm["spin1z"], \
+                eprm["spin1x"], eprm["spin1y"], eprm["spin1z"], \
                 # distance and inclination
-                eprm.distance * 1e6 * lal.PC_SI, eprm.inclination,
+                eprm["distance"] * 1e6 * lal.PC_SI, eprm["inclination"],
                 # These are eccentricity and other orbital parameters
                 0.0, 0.0, 0.0, 0.0,
                 # frequency binning params
@@ -49,7 +51,7 @@ def gen_waveform(event_params, flow=10.0, deltaf=0.125, fhigh=2048., fref=10.,
                 params,
                 lalsimulation.SimInspiralGetApproximantFromString(approximant))
 
-    return freq_ar, hp, hx
+    return freq_ar, hp.data.data, hx.data.data
 
 #######
 
@@ -68,19 +70,28 @@ def waveforms(request):
            # This is where waveform generation code will go Chris P
            # You parse the request for as such
             f, hp, hx = gen_waveform(form.cleaned_data)
+            assert len(f) == len(hp), "{0}, {1}".format(len(f), len(hp))
 
             fig = pyplot.Figure()
+            canvas = FigureCanvas(fig)
+            ax = fig.add_subplot(1, 1, 1)
 
             # For now just plot |h|
             # FIXME: These will most likely overlap
-            pyplot.plot(f, numpy.abs(hp), linecolor='black')
-            pyplot.plot(f, numpy.abs(hx), linecolor='red')
+            ax.plot(f, numpy.abs(hx), color='red', label=r"$|h_{\times}|(f)$")
+            ax.plot(f, numpy.abs(hp), color='black', linestyle='-.', \
+                        label=r"$|h_+|(f)$")
 
-            pyplot.xlim(f[0], f[-1])
+            ax.set_xlabel(r"Frequency [Hz]")
+            ax.set_ylabel(r"Strain [$\textrm{Hz}^{-1/2}$]")
+
+            ax.loglog()
+            ax.set_xlim(10, f[-1])
             # FIXME: Set from wf considerations (e.g. amp at isco)
-            pyplot.ylim(1e-25, 1e-23)
+            #pyplot.ylim(1e-25, 1e-23)
 
-            canvas = FigureCanvas(fig)
+            fig.legend()
+
             buf = io.BytesIO()
             canvas.print_png(buf)
             response = HttpResponse(buf.getvalue(), content_type='image/png')
