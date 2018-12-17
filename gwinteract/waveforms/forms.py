@@ -1,10 +1,5 @@
 from django import forms
 
-try:
-    from inspect import signature
-except ImportError:
-    from inspect import getargspec
-
 import lalsimulation
 
 def _is_useable_psd(func):
