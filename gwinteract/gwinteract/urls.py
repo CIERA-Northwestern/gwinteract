@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^posteriors/', include('posteriors.urls'), name='posteriors'),
     url(r'^calculations/', include('calculations.urls'), name='calculations'),
     url(r'^waveforms/', include('waveforms.urls'), name='waveforms'),
+    url(r'^popsynth/', include('popsynth.urls'), name='popsynth'),
     url(r'^admin/', admin.site.urls),
 ]
 

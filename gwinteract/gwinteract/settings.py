@@ -52,6 +52,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
+    'sslserver',
+    'popsynth',
     'waveforms',
     'posteriors',
     'calculations',
