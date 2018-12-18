@@ -53,6 +53,13 @@ def gen_waveform(event_params, flow=10.0, deltaf=0.125, fhigh=2048., fref=10.,
 
     return freq_ar, hp.data.data, hx.data.data
 
+def gen_psd(form, freq_ar, asd=True):
+    name = form.cleaned_data["psd"]
+    psd = map(form._PSDS[name], freq_ar)
+    # DC component is always set to nan
+    psd[0] = psd[1]
+    return numpy.sqrt(psd) if asd else numpy.asarray(psd)
+
 #######
 
 def index(request):
@@ -72,6 +79,8 @@ def waveforms(request):
             f, hp, hx = gen_waveform(form.cleaned_data)
             assert len(f) == len(hp), "{0}, {1}".format(len(f), len(hp))
 
+            asd = gen_psd(form, f) if form.cleaned_data["psd"] != "None" else None
+
             fig = pyplot.Figure()
             canvas = FigureCanvas(fig)
             ax = fig.add_subplot(1, 1, 1)
@@ -82,6 +91,14 @@ def waveforms(request):
             ax.plot(f, numpy.abs(hp), color='black', linestyle='-.', \
                         label=r"$|h_+|(f)$")
 
+            # FIXME: assumes flow is 10 Hz
+            idx = numpy.searchsorted(f, 10)
+            yscale = max(numpy.abs(hx)[idx], numpy.abs(hp)[idx]) * 1.1
+
+            if asd is not None:
+                yscale = max(yscale / 1.1, asd[idx]) * 1.1
+                ax.plot(f, asd, color='blue', label=r"$\sqrt{S_n(f)}$")
+
             ax.set_xlabel(r"Frequency [Hz]")
             ax.set_ylabel(r"Strain [$\textrm{Hz}^{-1/2}$]")
 
@@ -89,8 +106,10 @@ def waveforms(request):
             ax.set_xlim(10, f[-1])
             # FIXME: Set from wf considerations (e.g. amp at isco)
             #pyplot.ylim(1e-25, 1e-23)
+            ax.set_ylim(None, yscale)
 
             fig.legend()
+            pyplot.tight_layout()
 
             buf = io.BytesIO()
             canvas.print_png(buf)
