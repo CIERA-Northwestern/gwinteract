@@ -1,5 +1,7 @@
 from django import forms
 
+from collections import OrderedDict
+
 import lalsimulation
 
 def _is_useable_psd(func):
@@ -18,7 +20,13 @@ def _get_psds(module):
 
 class WaveformForm(forms.Form):
 
-    _PSDS = dict(_get_psds(lalsimulation))
+    _PSDS = OrderedDict(_get_psds(lalsimulation))
+    _REPR = OrderedDict((("time", "time domain"),
+             ("freq", "frequency domain"),
+             ("tf", "time-frequency")))
+
+    representation = forms.ChoiceField(label="representation", \
+                            choices=_REPR.items())
 
     m1 = forms.FloatField(label='m1')#, default=1.4)
     m2 = forms.FloatField(label='m2')#, default=1.4)
