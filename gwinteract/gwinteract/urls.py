@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^calculations/', include('calculations.urls'), name='calculations'),
     url(r'^waveforms/', include('waveforms.urls'), name='waveforms'),
     url(r'^popsynth/', include('popsynth.urls'), name='popsynth'),
+    url(r'^popsynth-generation/', include('popsynth_generation.urls'), name='popsynth_generation'),
     url(r'^admin/', admin.site.urls),
 ]
 
