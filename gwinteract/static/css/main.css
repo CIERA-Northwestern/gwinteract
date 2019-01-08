@@ -1,7 +1,7 @@
 html, body {
-  background: #404040;
+  background: #374859;
   color: white;
-  font: 400 15px/1.5 "Open Sans", "Gill Sans", Arial, sans-serif;
+  font: 400 18px/1.5 "Open Sans", "Gill Sans", Arial, sans-serif;
   margin: 0;
 }
 
@@ -51,6 +51,31 @@ main {
 form label {
   display: block;
   margin: 1em 0
+}
+
+legend {
+  color : black;
+  display: block;
+  padding-left: 16px;
+  padding-right: 2px;
+  border: none;
+  font-size : xx-large;
+}
+
+label {
+  color : black;
+  display: block;
+  padding-left: 2px;
+  padding-right: 2px;
+  border: none;
+}
+
+span {
+  color : black;
+  display: block;
+  padding-left: 2px;
+  padding-right: 2px;
+  border: none;
 }
 
 @media screen and (max-width: 1200px) {

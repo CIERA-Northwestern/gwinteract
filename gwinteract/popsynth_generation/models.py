@@ -16,23 +16,23 @@ class NewPopSynthModel(models.Model):
     convergence_params = ArrayField(models.CharField(max_length=20), default=return_list(('mass_1', 'mass_2', 'porb', 'ecc')))
 
     SAMPLER_CHOICES = (
-        ('INDEPENDENT', 'independent'),
-        ('MULTIDIM', 'multidim'),
+        ('independent', 'independent'),
+        ('multidim', 'multidim'),
     )
     initial_samp = models.CharField(max_length=20, choices=SAMPLER_CHOICES)
 
     GALAXY_COMPONENT_CHOICES = (
-        ('THINDISK', 'ThinDisk'),
-        ('BULGE', 'Bulge'),
-        ('THICKDISK', 'ThickDisk'),
-        ('DELTABURST', 'DeltaBurst'),
+        ('ThinDisk', 'ThinDisk'),
+        ('Bulge', 'Bulge'),
+        ('ThickDisk', 'ThickDisk'),
+        ('DeltaBurst', 'DeltaBurst'),
         ('FIRE', 'FIRE'),
     )
     galaxy_component = models.CharField(max_length=20, choices=GALAXY_COMPONENT_CHOICES)
 
     metallicity = models.FloatField(default=0.002)
-    Niter = models.IntegerField(default=100000)
-    Nstep = models.IntegerField(default=100000000)
+    Niter = models.IntegerField(default=100000000)
+    Nstep = models.IntegerField(default=100000)
 
     # Filters
     mass_transfer_white_dwarf_to_co = models.BooleanField(default=False)
