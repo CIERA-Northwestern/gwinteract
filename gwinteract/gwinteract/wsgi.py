@@ -11,7 +11,13 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gwinteract.settings")
+os.environ["DJANGO_SETTINGS_MODULE"] = "gwinteract.settings"
+os.environ['HTTPS'] = "on"
+os.environ['GRAVITYSPYTOOLS_NAME'] = ''
+os.environ['GRAVITYSPYTOOLS_USER'] = ''
+os.environ['GRAVITYSPYTOOLS_PASSWORD'] = ''
+os.environ['GRAVITYSPYTOOLS_HOST'] = ''
+os.environ['GRAVITYSPYTOOLS_PORT'] = ''
 
 _application = get_wsgi_application()
 
