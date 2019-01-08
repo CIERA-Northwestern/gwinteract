@@ -11,7 +11,13 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gwinteract.settings")
+os.environ["DJANGO_SETTINGS_MODULE"] = "gwinteract.settings"
+os.environ['HTTPS'] = "on"
+os.environ['GWSCI_NAME'] = ''
+os.environ['GWSCI_USER'] = ''
+os.environ['GWSCI_PASSWORD'] = ''
+os.environ['GWSCI_HOST'] = ''
+os.environ['GWSCI_PORT'] = ''
 
 _application = get_wsgi_application()
 

@@ -52,10 +52,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
+    'sslserver',
+    'popsynth',
+    'popsynth_generation',
     'waveforms',
     'posteriors',
     'calculations',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -108,8 +114,17 @@ os.environ['wsgi.url_scheme'] = 'https'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ['GWSCI_NAME'],
+        'USER': os.environ['GWSCI_USER'],
+        'PASSWORD': os.environ['GWSCI_PASSWORD'],
+        'HOST': os.environ['GWSCI_HOST'],
+        'PORT': os.environ['GWSCI_PORT'],
+    },
+    'development': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
