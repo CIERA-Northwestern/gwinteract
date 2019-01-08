@@ -13,11 +13,11 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "gwinteract.settings"
 os.environ['HTTPS'] = "on"
-os.environ['GRAVITYSPYTOOLS_NAME'] = ''
-os.environ['GRAVITYSPYTOOLS_USER'] = ''
-os.environ['GRAVITYSPYTOOLS_PASSWORD'] = ''
-os.environ['GRAVITYSPYTOOLS_HOST'] = ''
-os.environ['GRAVITYSPYTOOLS_PORT'] = ''
+os.environ['GWSCI_NAME'] = ''
+os.environ['GWSCI_USER'] = ''
+os.environ['GWSCI_PASSWORD'] = ''
+os.environ['GWSCI_HOST'] = ''
+os.environ['GWSCI_PORT'] = ''
 
 _application = get_wsgi_application()
 
