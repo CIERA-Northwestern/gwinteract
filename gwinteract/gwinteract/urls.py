@@ -18,7 +18,8 @@ from django.contrib import admin
 from home import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='home'),
+    url(r'^$', views.index, name='index'),
+    url(r'^home/', views.home, name='home'),
     url(r'^posteriors/', include('posteriors.urls'), name='posteriors'),
     url(r'^calculations/', include('calculations.urls'), name='calculations'),
     url(r'^waveforms/', include('waveforms.urls'), name='waveforms'),
