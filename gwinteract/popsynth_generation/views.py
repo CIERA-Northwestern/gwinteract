@@ -5,8 +5,9 @@ from .forms import NewPopSynthForm
 from .models import NewPopSynthModel
 
 def index(request):
-    form = NewPopSynthForm()
-    return render(request, 'popsynth-generation-form.html', {'form': form})
+    if request.user.is_authenticated:
+        form = NewPopSynthForm()
+        return render(request, 'popsynth-generation-form.html', {'form': form})
 
 def population_synthesis_form(request):
     # if this is a POST request we need to process the form data
