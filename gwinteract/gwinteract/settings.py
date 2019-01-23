@@ -53,11 +53,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sslserver',
     'home',
+    'popsynth',
+    'popsynth_generation',
     'waveforms',
     'newevent',
     'posteriors',
     'calculations',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -106,12 +111,23 @@ os.environ['wsgi.url_scheme'] = 'https'
 
 # Authentication backends for more info
 # https://docs.djangoproject.com/en/2.0/topics/auth/customizing/#writing-an-authentication-backend
-
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.RemoteUserBackend',
+)
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ['GWSCI_NAME'],
+        'USER': os.environ['GWSCI_USER'],
+        'PASSWORD': os.environ['GWSCI_PASSWORD'],
+        'HOST': os.environ['GWSCI_HOST'],
+        'PORT': os.environ['GWSCI_PORT'],
+    },
+    'development': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }

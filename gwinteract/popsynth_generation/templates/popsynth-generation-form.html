@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+{% block nav-search %}<a class="active" href="/popsynth-generation/">Generate Population</a>{% endblock %}
+<h1>Generate Population</h1>
+
+{% crispy form %}
+{% endblock %}
+

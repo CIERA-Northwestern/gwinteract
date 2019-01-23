@@ -1,12 +1,12 @@
 html, body {
-  background: #404040;
-  color: white;
-  font: 400 15px/1.5 "Open Sans", "Gill Sans", Arial, sans-serif;
+  background: white;
+  color: #4e2a84;
+  font: 400 18px/1.5 "Campton Extra Light", sans-serif;
   margin: 0;
 }
 
 header {
-  background-color: black;
+  background-color: #401f68;
   padding: 1em;
 }
 
@@ -51,6 +51,21 @@ main {
 form label {
   display: block;
   margin: 1em 0
+}
+
+legend {
+  padding-left: 32px;
+  padding-right: 2px;
+  border: none;
+  font-size : xx-large;
+}
+
+label {
+  color : black;
+  display: block;
+  padding-left: 2px;
+  padding-right: 2px;
+  border: none;
 }
 
 @media screen and (max-width: 1200px) {
