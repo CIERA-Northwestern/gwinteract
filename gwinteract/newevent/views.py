@@ -6,6 +6,10 @@ from .forms import GWEventForm
 from .models import GWEvent
 
 from ligo.gracedb.rest import GraceDb
+from sqlalchemy.engine import create_engine
+
+import pandas
+import os
 
 def index(request):
     form = GWEventForm()
@@ -33,13 +37,31 @@ def newevent(request):
                 if info['gw_id']:
                     gwevent.gw_id = info['gw_id']
                     gwevent.save()
+                return render(request, 'success.html', {'message' : "This event was created"})
             else:
                 if not gwevent.posteriors_uploaded:
-                    print("Yep this is here")
+                    filenames = client.files(gwevent.preferred_event).json()
+                    # find posterior samples file
+                    post_files = [ifile for ifile in filenames.keys() if 'posterior' in ifile and ',' not in ifile]
+                    if len(post_files) == 0:
+                        return render(request, 'success.html', {'message' : "No posterior files linked to event"})
+                    #download files
+                    for ifile in post_files:
+                        r = client.files(gwevent.preferred_event, '{0}'.format(ifile))
+                        outfile = open('{0}'.format(ifile), 'wb')
+                        outfile.write(r.read())
+                        outfile.close()
+                        try:
+                            samples = pandas.read_hdf('{0}'.format(ifile))
+                        except:
+                            samples = pandas.read_table('{0}'.format(ifile), sep=' ') 
+
+                        engine = create_engine("""postgresql://{0}:{1}@gwsci.ciera.northwestern.edu:5432/gw_posteriors""".format(os.environ['GWSCI_USER'], os.environ['GWSCI_PASSWORD']))
+                        samples.to_sql('{0}_{1}'.format(gwevent.superevent_id, ifile.split('.')[0]), engine)
+                    gwevent.posteriors_uploaded = True
+                    gwevent.save()
                 if not gwevent.redshift_uploaded:
                     print("Yep this is here")
                 if not gwevent.skymap_uploaded:
                     print("Yep this is here")
-            import pdb
-            pdb.set_trace()
-            return render(request)
+                return render(request, 'success.html', {'message' : "This event was updated"})

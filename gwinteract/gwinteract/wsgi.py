@@ -21,7 +21,7 @@ os.environ['GWSCI_PORT'] = ''
 
 _application = get_wsgi_application()
 
-env_variables_to_pass = ['GRAVITYSPY_DATABASE_USER', 'GRAVITYSPY_DATABASE_PASSWD']
+env_variables_to_pass = ['GWSCI_USER', 'GWSCI_PASSWORD']
 def application(environ, start_response):
     # pass the WSGI environment variables on through to os.environ
     for var in env_variables_to_pass:
