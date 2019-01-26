@@ -58,6 +58,7 @@ def newevent(request):
 
                         engine = create_engine("""postgresql://{0}:{1}@gwsci.ciera.northwestern.edu:5432/gw_posteriors""".format(os.environ['GWSCI_USER'], os.environ['GWSCI_PASSWORD']))
                         samples.to_sql('{0}_{1}'.format(gwevent.superevent_id, ifile.split('.')[0]), engine)
+                        engine.dispose()
                     gwevent.posteriors_uploaded = True
                     gwevent.save()
                 if not gwevent.redshift_uploaded:
