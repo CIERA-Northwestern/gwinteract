@@ -4,6 +4,8 @@ from django.http import HttpResponse
 
 from django.shortcuts import render
 from .forms import PosteriorForm
+from .forms import get_min_max_param_json
+
 from ligo.gracedb.rest import GraceDb, HTTPError
 from gwpy.table import EventTable
 
@@ -82,3 +84,13 @@ def filter_and_get_samples(form):
                           passwd=os.getenv('GWSCI_PASSWORD'))
     ps = ps.to_pandas().iloc[0:1000]
     return ps
+
+def get_min_max_param(request):
+    if request.method == 'GET':
+        param = request.GET.get('param', '')
+        graceid = request.GET.get('graceid', '')
+        data = get_min_max_param_json(param=param, graceid=graceid)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)
