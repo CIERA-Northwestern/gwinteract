@@ -35,7 +35,7 @@ def posteriors(request):
             new = 'histogram'
             histogramurl = (request.get_full_path()[::-1].replace(old[::-1], new[::-1], 1))[::-1]
 
-            return render(request, 'gracedb.html', {'results' : ps.iloc[0:1000].to_dict(orient='records'), 'histogramurl' : histogramurl})
+            return render(request, 'gracedb.html', {'results' : ps.to_html(table_id="samples"), 'histogramurl' : histogramurl})
         else:
             return render(request, 'form.html', {'form': form})
 
@@ -77,12 +77,11 @@ def filter_and_get_samples(form):
     ps = EventTable.fetch('gravityspy', '\"{0}\"'.format(graceid),
                           selection=['{0}<{1}<{2}'.format(param1_min, param1, param1_max),
                                      '{0}<{1}<{2}'.format(param2_min, param2, param2_max)],
-                          columns=[param1, param2],
                           db='gw_posteriors',
                           host='gwsci.ciera.northwestern.edu',
                           user=os.getenv('GWSCI_USER'),
                           passwd=os.getenv('GWSCI_PASSWORD'))
-    ps = ps.to_pandas().iloc[0:1000]
+    ps = ps.to_pandas().sample(n=1000)
     return ps
 
 def get_min_max_param(request):
