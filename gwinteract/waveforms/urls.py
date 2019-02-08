@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^waveforms/$', views.waveforms, name='waveforms'),
     url(r'^plot/$', views.plot, name='plot'),
+    url(r'^snr/$', views.snr, name='snr'),
 ]
