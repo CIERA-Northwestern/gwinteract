@@ -61,7 +61,7 @@ def gen_psd(form, freq_ar, asd=True):
 #######
 
 def index(request):
-    form = WaveformForm()
+    form = WaveformForm(_defaults)
     return render(request, 'waveform-form.html', {'form': form})
 
 def waveforms(request):
@@ -109,3 +109,22 @@ def plot(request):
             response = HttpResponse(buf.getvalue(), content_type='image/png')
             pyplot.close(plot)
             return response
+
+def snr(request):
+    # Calculates the optimal SNR value
+    if request.method == 'GET':
+        form = WaveformForm(request.GET)
+
+        if form.is_valid():
+            f, hp, hx = gen_waveform(form.cleaned_data)
+            assert len(f) == len(hp), "{0}, {1}".format(len(f), len(hp))
+
+            hp = FrequencySeries(hp, frequencies=f)
+            hx = FrequencySeries(hx, frequencies=f)
+
+            asd = FrequencySeries(gen_psd(form, f), frequencies=f) if form.cleaned_data["psd"] != "None" else None
+
+
+            snr = ((hp/asd) @ (hp.conj()/asd)).to_value() * hp.df.to_value() if asd else None
+
+    return HttpResponse(snr.real)
