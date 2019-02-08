@@ -74,9 +74,9 @@ def filter_and_get_samples(form):
     param2_min = form.cleaned_data['param2_min']
     param2_max = form.cleaned_data['param2_max']
 
-    ps = EventTable.fetch('gravityspy', '\"{0}\"'.format(graceid),
-                          selection=['{0}<{1}<{2}'.format(param1_min, param1, param1_max),
-                                     '{0}<{1}<{2}'.format(param2_min, param2, param2_max)],
+    ps = EventTable.fetch('gravityspy', '\"{0}\" WHERE \"{1}\" BETWEEN {2} AND {3} '
+                                        'AND \"{4}\" BETWEEN {5} AND {6}'.format(graceid, param1, param1_min, param1_max,
+                                                                                 param2, param2_min, param2_max,),
                           db='gw_posteriors',
                           host='gwsci.ciera.northwestern.edu',
                           user=os.getenv('GWSCI_USER'),
