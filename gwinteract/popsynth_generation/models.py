@@ -11,8 +11,8 @@ def return_list(x):
 class NewPopSynthModel(models.Model):
 
     # command line arguments
-    final_kstar1 = ArrayField(models.IntegerField(), default=return_list((13,15)))
-    final_kstar2 = ArrayField(models.IntegerField(), default=return_list((13,15)))
+    final_kstar1 = ArrayField(models.IntegerField(), default=return_list((13,14)))
+    final_kstar2 = ArrayField(models.IntegerField(), default=return_list((13,14)))
     convergence_params = ArrayField(models.CharField(max_length=20), default=return_list(('mass_1', 'mass_2', 'porb', 'ecc')))
 
     SAMPLER_CHOICES = (
@@ -38,7 +38,7 @@ class NewPopSynthModel(models.Model):
     mass_transfer_white_dwarf_to_co = models.BooleanField(default=False)
     select_final_state = models.BooleanField(default=True)
     binary_state = ArrayField(models.IntegerField(), default=return_list((0,1,2)))
-    merger_type = ArrayField(models.CharField(max_length=4), default=return_list((['-001'])))
+    merger_type = ArrayField(models.CharField(max_length=4), default=return_list(('-001','1313', '1314', '1413', '1414')))
 
     # convergence
     lisa_convergence = models.BooleanField(default=False)
