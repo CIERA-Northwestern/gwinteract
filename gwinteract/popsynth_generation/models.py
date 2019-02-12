@@ -41,7 +41,7 @@ class NewPopSynthModel(models.Model):
     merger_type = ArrayField(models.CharField(max_length=4), default=return_list((['-001'])))
 
     # convergence
-    LISA_convergence = models.BooleanField(default=False)
+    lisa_convergence = models.BooleanField(default=False)
 
     # rand_seed
     seed = models.IntegerField(default=21)
@@ -82,6 +82,10 @@ class NewPopSynthModel(models.Model):
     pts3 = models.FloatField(default=0.02)
     # sigma is the dispersion in the Maxwellian for the SN kick speed (190 km/s).
     sigma = models.FloatField(default=265.0)
+    # Fraction of full NS kicks for BH bhsgmafrac, default is full NS kicks
+    bhsigmafrac = models.FloatField(default=1.0)
+    # Distribution from pole of star from which to draw the kick angle (Default set to 90: uniform)
+    polar_kick_angle = models.FloatField(default=90.0)
     # beta is wind velocity factor: proportional to vwind;;2 (1/8).
     beta = models.FloatField(default=-1.0)
     # xi is the wind accretion efficiency factor (1.0).
@@ -95,14 +99,14 @@ class NewPopSynthModel(models.Model):
     # gamma is the angular momentum factor for mass lost during Roche (-1.0).
     gamma = models.FloatField(default=-2.0)
     bconst = models.FloatField(default=-3000)
-    CK = models.FloatField(default=-1000)
+    ck = models.FloatField(default=-1000)
     merger = models.FloatField(default=0)
     windflag = models.FloatField(default=3)
-    B_0 = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
+    b_0 = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
     bacc = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
     tacc = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
-    bkick = ArrayField(models.FloatField(),
-                       default=return_list((0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)))
+    natal_kick = ArrayField(models.FloatField(),
+                       default=return_list((0.0,0.0,0.0,0.0,0.0,0.0)))
     # initialize the binary components
     massc = ArrayField(models.FloatField(), default=return_list((0.0,0.0))) 
     opsin = ArrayField(models.FloatField(), default=return_list((0.0,0.0))) 
