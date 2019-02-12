@@ -11,8 +11,8 @@ def return_list(x):
 class NewPopSynthModel(models.Model):
 
     # command line arguments
-    final_kstar1 = ArrayField(models.IntegerField(), default=return_list((13,15)))
-    final_kstar2 = ArrayField(models.IntegerField(), default=return_list((13,15)))
+    final_kstar1 = ArrayField(models.IntegerField(), default=return_list((13,14)))
+    final_kstar2 = ArrayField(models.IntegerField(), default=return_list((13,14)))
     convergence_params = ArrayField(models.CharField(max_length=20), default=return_list(('mass_1', 'mass_2', 'porb', 'ecc')))
 
     SAMPLER_CHOICES = (
