@@ -99,10 +99,10 @@ class NewPopSynthModel(models.Model):
     # gamma is the angular momentum factor for mass lost during Roche (-1.0).
     gamma = models.FloatField(default=-2.0)
     bconst = models.FloatField(default=-3000)
-    CK = models.FloatField(default=-1000)
+    ck = models.FloatField(default=-1000)
     merger = models.FloatField(default=0)
     windflag = models.FloatField(default=3)
-    B_0 = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
+    b_0 = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
     bacc = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
     tacc = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
     natal_kick = ArrayField(models.FloatField(),
