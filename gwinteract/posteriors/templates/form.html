@@ -32,4 +32,45 @@
 <input type="submit" value="Display Samples" />
 
 </form>
+
+<script type="text/javascript">
+    $('#id_param1').change(function(){
+        var param1 = document.getElementById("id_param1").value;
+        var graceid = document.getElementById("id_graceid").value;
+        var param1_max=$('input[id="id_param1_max"]');
+        var param1_min=$('input[id="id_param1_min"]');
+        $.ajax({ 
+            type: 'GET', 
+            url: '/posteriors/get-min-max-param/', 
+            data: { param: param1, graceid:graceid }, 
+            dataType: 'json',
+            success: function (data) { 
+                    param1_max.val(data[0]['max']);
+                    param1_min.val(data[0]['min']);
+            }
+            });
+        });
+</script>
+
+<script type="text/javascript">
+    $('#id_param2').change(function(){
+        var param2 = document.getElementById("id_param2").value;
+        var graceid = document.getElementById("id_graceid").value;
+        var param2_max=$('input[id="id_param2_max"]');
+        var param2_min=$('input[id="id_param2_min"]');
+        $.ajax({ 
+            type: 'GET', 
+            url: '/posteriors/get-min-max-param/', 
+            data: { param: param2, graceid:graceid }, 
+            dataType: 'json',
+            success: function (data) { 
+                    param2_max.val(data[0]['max']);
+                    param2_min.val(data[0]['min']);
+            }
+            });
+        });
+</script>
+
+</body>
+</html>
 {% endblock %}

@@ -2,34 +2,36 @@
 
 {% block content %}
 
+{% load crispy_forms_tags %}
+
 {% block nav-search %}<a class="active" href="/popsynth/">Population Synthesis</a>{% endblock %}
+
 <h1>Population Synthesis</h1>
 
-<form action="/popsynth/popsynth/" method="get" style="display: inline;">
-{% if form.errors %}
-    {% for field in form %}
-        {% for error in field.errors %}
-            <div class="alert alert-danger">
-                <strong>{{ error|escape }}</strong>
-            </div>
-        {% endfor %}
-    {% endfor %}
-    {% for error in form.non_field_errors %}
-        <div class="alert alert-danger">
-            <strong>{{ error|escape }}</strong>
-        </div>
-    {% endfor %}
-{% endif %}
+{% crispy form %}
 
-<fieldset>
-{% for field in form.visible_fields %}
-    <label>
-    {{ field.label }} : {{ field }}
-    </label>
-{% endfor %}
-</fieldset>
+<div id="img_container">
+</div>
 
-<input type="submit" value="Population Synthesis" />
 
-</form>
+<script>
+    // wait for the DOM to be loaded
+    $(document).ready(function() {
+        // bind 'waveform_form' and provide a simple callback function
+        $('#popsynth_form').submit(function(submit_button) {
+            submit_button.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var url = form.attr('action');
+            var container = document.getElementById("img_container");
+            while (container.firstChild) {
+                container.removeChild(container.firstChild); // Want to remove old images to avoid build-up
+            }
+            // Create the image url and add it via get request
+            var image = document.createElement("IMG");
+            image.setAttribute("src", url.concat("?", form.serialize()));
+            container.appendChild(image);
+        });
+    });
+</script>
+
 {% endblock %}

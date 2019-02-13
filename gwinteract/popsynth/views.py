@@ -9,7 +9,9 @@ import seaborn
 seaborn.set(rc={'text.usetex' : False})
 import pandas
 import io
+import os
 
+from sqlalchemy.engine import create_engine
 from matplotlib import use
 use('agg')
 from matplotlib import pyplot
@@ -32,15 +34,9 @@ def popsynth(request):
             old = 'popsynth'
             new = 'plot_bns'
             bns_plot_url = (request.get_full_path()[::-1].replace(old[::-1], new[::-1], 1))[::-1]
-            new = 'plot_nsbh'
-            nsbh_plot_url = (request.get_full_path()[::-1].replace(old[::-1], new[::-1], 1))[::-1]
-            new = 'plot_bbh'
-            bbh_plot_url = (request.get_full_path()[::-1].replace(old[::-1], new[::-1], 1))[::-1]
 
             return render(request, 'popsynth-results.html',
-                          {'bns_plot_url' : bns_plot_url,
-                           'nsbh_plot_url' : nsbh_plot_url,
-                           'bbh_plot_url' : bbh_plot_url,})
+                          {'bns_plot_url' : bns_plot_url,})
         else:
             return render(request, 'form.html', {'popsynth-form.html': form})
 
@@ -53,17 +49,11 @@ def plot_bns(request):
         # check whether it's valid:
         if form.is_valid():
             # display BNS
-            bpp = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/bpp')
-            bcm = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/bcm')
-            init_cond = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/initCond')
-            bns_bcm = bcm.loc[bcm.merger_type ==1313]
-            bns_bpp = bpp.loc[bpp.bin_num.isin(bns_bcm.bin_num)]
-            bns_init_cond = init_cond.loc[init_cond.bin_num.isin(bns_bcm.bin_num)]
-
-            # find (source frame) masses at time of merger
-            systems = bns_bpp.loc[(bns_bpp.kstar_1 == 13) & (bns_bpp.kstar_2 == 13) & (bns_bpp.evol_type == 3)]
+            bcm = get_bcm_from_form(form)
+            plotting_param1 = form.cleaned_data['plotting_param1']
+            plotting_param2 = form.cleaned_data['plotting_param2']
             with seaborn.axes_style('white'):
-                plot = seaborn.jointplot('mass_1', 'mass_2', systems).set_axis_labels("mass 1", "mass 2")
+                plot = seaborn.jointplot(plotting_param1, plotting_param2, bcm).set_axis_labels(plotting_param1.replace('_', ' '), plotting_param2.replace('_', ' '))
             # make figure able to display in browser
             fig = plot.fig
             canvas = FigureCanvas(fig)
@@ -73,60 +63,21 @@ def plot_bns(request):
             fig.clear()
             return response
 
-def plot_nsbh(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'GET':
 
-        # create a form instance and populate it with data from the request:
-        form = PopSynthForm(request.GET)
-        # check whether it's valid:
-        if form.is_valid():
-            # display BNS
-            bpp = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/bpp')
-            bcm = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/bcm')
-            init_cond = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/initCond')
-            nsbh_bcm = bcm.loc[bcm.merger_type.isin([1314,1413])]
-            nsbh_bpp = bpp.loc[bpp.bin_num.isin(nsbh_bcm.bin_num)]
-            nsbh_init_cond = init_cond.loc[init_cond.bin_num.isin(nsbh_bcm.bin_num)]
+def get_bcm_from_form(form):
+    model = form.cleaned_data['model']
+    table = form.cleaned_data['table']
+    merger_type = form.cleaned_data['merger_type'] 
+    plotting_param1 = form.cleaned_data['plotting_param1']
+    plotting_param2 = form.cleaned_data['plotting_param2']
+    engine = create_engine("""postgresql://{0}:{1}@gwsci.ciera.northwestern.edu:5432/cosmic""".format(os.environ['GWSCI_USER'], os.environ['GWSCI_PASSWORD']))
+    bcm = pandas.read_sql('SELECT \"{0}\", \"{1}\" FROM {2}.{3} WHERE merger_type = \'{4}\''.format(plotting_param1, plotting_param2, model, table, merger_type),
+                          engine)
+    bpp_columns = pandas.read_sql('SELECT * FROM {0}.bpp LIMIT 1'.format(model), engine).keys()
+    if (plotting_param1 in bpp_columns) and (plotting_param2 in bpp_columns) and (merger_type != '-001'):
+        # Then this person *really* wants to be plotting properties of the system right before it merged
+        kstar_type_to_search = (int(merger_type[0:2]), int(merger_type[2:4]))
+        bcm = pandas.read_sql('SELECT \"{0}\", \"{1}\" FROM {2}.{3} WHERE kstar_1 IN {4} AND kstar_2 IN {4} AND evol_type =3'.format(plotting_param1, plotting_param2, model, 'bpp', kstar_type_to_search), engine)
+    engine.dispose()
 
-            # find (source frame) masses at time of merger
-            systems = nsbh_bpp.loc[(nsbh_bpp.kstar_1.isin([14,13])) & (nsbh_bpp.kstar_2.isin([14,13])) & (nsbh_bpp.evol_type == 3)]
-            with seaborn.axes_style('white'):
-                plot = seaborn.jointplot('mass_1', 'mass_2', systems,).set_axis_labels("mass 1", "mass 2")
-            # make figure able to display in browser
-            fig = plot.fig
-            canvas = FigureCanvas(fig)
-            buf = io.BytesIO()
-            canvas.print_png(buf)
-            response=HttpResponse(buf.getvalue(),content_type='image/png')
-            fig.clear()
-            return response
-
-def plot_bbh(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'GET':
-
-        # create a form instance and populate it with data from the request:
-        form = PopSynthForm(request.GET)
-        # check whether it's valid:
-        if form.is_valid():
-            # display BNS
-            bpp = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/bpp')
-            bcm = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/bcm')
-            init_cond = pandas.read_hdf('dat_FIRE_13_15_13_15.h5', key='/initCond')
-            bbh_bcm = bcm.loc[bcm.merger_type ==1414]
-            bbh_bpp = bpp.loc[bpp.bin_num.isin(bbh_bcm.bin_num)]
-            bbh_init_cond = init_cond.loc[init_cond.bin_num.isin(bbh_bcm.bin_num)]
-
-            # find (source frame) masses at time of merger
-            systems = bbh_bpp.loc[(bbh_bpp.kstar_1 == 14) & (bbh_bpp.kstar_2 == 14) & (bbh_bpp.evol_type == 3)]
-            with seaborn.axes_style('white'):
-                plot = seaborn.jointplot('mass_1', 'mass_2', systems,).set_axis_labels("mass 1", "mass 2")
-            # make figure able to display in browser
-            fig_bbh = plot.fig
-            canvas = FigureCanvas(fig_bbh)
-            buf = io.BytesIO()
-            canvas.print_png(buf)
-            response=HttpResponse(buf.getvalue(),content_type='image/png')
-            pyplot.close(fig_bbh)
-            return response
+    return bcm
