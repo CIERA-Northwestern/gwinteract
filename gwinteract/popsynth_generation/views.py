@@ -5,7 +5,7 @@ from .forms import NewPopSynthForm
 from .models import NewPopSynthModel
 
 def index(request):
-    #if request.user.is_authenticated:
+    if request.user.is_authenticated:
         form = NewPopSynthForm()
         return render(request, 'popsynth-generation-form.html', {'form': form})
 
