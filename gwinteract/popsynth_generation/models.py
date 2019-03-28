@@ -26,7 +26,6 @@ class NewPopSynthModel(models.Model):
         ('Bulge', 'Bulge'),
         ('ThickDisk', 'ThickDisk'),
         ('DeltaBurst', 'DeltaBurst'),
-        ('FIRE', 'FIRE'),
     )
     galaxy_component = models.CharField(max_length=20, choices=GALAXY_COMPONENT_CHOICES)
 
@@ -59,6 +58,9 @@ class NewPopSynthModel(models.Model):
     lambdaf = models.FloatField(default=1.0)
     # ceflag > 0 activates spin-energy correction in common-envelope (0).
     ceflag = models.FloatField(default=0)
+    cekickflag = models.IntegerField(default=0)
+    cemergeflag = models.IntegerField(default=0)
+    cehestarflag = models.IntegerField(default=0)
     # tflag > 0 activates tidal circularisation (1).
     tflag = models.FloatField(default=1)
     # ifflag > 0 uses WD IFMR of HPE, 1995, MNRAS, 272, 800 (0).
@@ -74,14 +76,22 @@ class NewPopSynthModel(models.Model):
     # idum is the random number seed used by the kick routine.
     # Next come the parameters that determine the timesteps chosen in each
     # evolution phase as decimal fractions of the time taken in that phase.:
-    #                 pts1 - MS                  (0.05)
-    pts1 = models.FloatField(default=0.05)
+    #                 pts1 - MS                  (0.001)
+    pts1 = models.FloatField(default=0.001)
     #                 pts2 - GB, CHeB, AGB, HeGB (0.01)
     pts2 = models.FloatField(default=0.01)
     #                 pts3 - HG, HeMS            (0.02)
     pts3 = models.FloatField(default=0.02)
+    # ecsnp>0 turns on ECSN and also sets the maximum ECSN mass range (mass at the time of the SN; BSE=st=2.25, Pod=2.5)
+    ecsnp = models.FloatField(default=2.5)
+    # ecsn_mlow sets the low end of the ECSN mass range (BSE=1.6, Pod=1.4, StarTrack=1.85)
+    ecsn_mlow = models.FloatField(default=1.6)
+    # aic is set to 1 for the inclusion of AIC low kicks (even if ecsnp=0), set to 0 if off
+    aic = models.FloatField(default=1.0)
     # sigma is the dispersion in the Maxwellian for the SN kick speed (190 km/s).
     sigma = models.FloatField(default=265.0)
+    # sigmadiv sets the ECSN kick, negative sets the ECSN sigma value to sigmadiv and positive divides sigmadiv into the above sigma
+    sigmadiv=models.FloatField(default=-20.0)
     # Fraction of full NS kicks for BH bhsgmafrac, default is full NS kicks
     bhsigmafrac = models.FloatField(default=1.0)
     # Distribution from pole of star from which to draw the kick angle (Default set to 90: uniform)
@@ -102,16 +112,10 @@ class NewPopSynthModel(models.Model):
     ck = models.FloatField(default=-1000)
     merger = models.FloatField(default=0)
     windflag = models.FloatField(default=3)
-    b_0 = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
-    bacc = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
-    tacc = ArrayField(models.FloatField(), default=return_list((0.0,0.0)))
-    natal_kick = ArrayField(models.FloatField(),
+    natal_kick_array = ArrayField(models.FloatField(),
                        default=return_list((0.0,0.0,0.0,0.0,0.0,0.0)))
-    # initialize the binary components
-    massc = ArrayField(models.FloatField(), default=return_list((0.0,0.0))) 
-    opsin = ArrayField(models.FloatField(), default=return_list((0.0,0.0))) 
-    epoch = ArrayField(models.FloatField(), default=return_list((0.0,0.0))) 
-    tphys = models.FloatField(default=0.0)
+    qcrit_array = ArrayField(models.FloatField(),
+                       default=return_list((0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)))
     ppsn = models.IntegerField(default=1)
 
     created_at = models.DateTimeField(auto_now_add=True)

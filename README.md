@@ -1,5 +1,5 @@
 # gwinteract
-Django Web App Hosted at https://gwsci.ciera.northwestern.edu
+Django Web App Hosted at https://gwsci.ciera.northwestern.edu/home
 
 # Python Packges needed
 
