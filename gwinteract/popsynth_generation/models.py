@@ -37,6 +37,7 @@ class NewPopSynthModel(models.Model):
     mass_transfer_white_dwarf_to_co = models.BooleanField(default=False)
     select_final_state = models.BooleanField(default=True)
     binary_state = ArrayField(models.IntegerField(), default=return_list((0,1,2)))
+    lisa_sources = models.BooleanField(default=False)
 
     # convergence
     lisa_convergence = models.BooleanField(default=False)
