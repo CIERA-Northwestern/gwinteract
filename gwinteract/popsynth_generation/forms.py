@@ -38,7 +38,6 @@ class NewPopSynthForm(forms.ModelForm):
                     Column('mass_transfer_white_dwarf_to_co', css_class='form-group col-md-4 mb-0'),
                     Column('select_final_state', css_class='form-group col-md-4 mb-0'),
                     Column('binary_state', css_class='form-group col-md-4 mb-0'),
-                    Column('merger_type', css_class='form-group col-md-4 mb-0'),
                     css_class='form-row'
                 ),
                 ),
@@ -108,7 +107,7 @@ class NewPopSynthForm(forms.ModelForm):
                   'Niter', 'Nstep',
                   'mass_transfer_white_dwarf_to_co',
                   'select_final_state', 'binary_state',
-                  'merger_type', 'lisa_convergence',
+                  'lisa_convergence',
                   'seed','neta', 'bwind',
                   'hewind', 'alpha1', 'lambdaf',
                   'ceflag', 'cekickflag', 'cemergeflag', 'cehestarflag',
@@ -138,9 +137,6 @@ class NewPopSynthForm(forms.ModelForm):
                                                  "white dwarfs onto compact objects")),
             'select_final_state': _(mark_safe("<b>FINAL STATE</b>: (DONT TOUCH) True to only retain the final entry of the bcm array")),
             'binary_state': _(mark_safe("<b>STATE OF BINARY</b>: 0 The binary is still alive today, 1 the binary has coalesced, 2 the binary system was disrupted")),
-            'merger_type': _(mark_safe("<b>MERGER TYPES TO TRAck</b>: Leave as -1 for tracking systems that are still binaries today. Otherwise, it goes by the logic "
-                             "kstar1kstar2 so like 1313 for NSNS or 1414 for BHBH "
-                             "e.g. enter 1313, 1314, 1413, 1414 if you would like results that keep BNS NSBH and BBH mergers")),
             'lisa_convergence': _(mark_safe("<b>TRAck CONVERGENCE FOR LISA SOURCES</b>: Designed to converge on systems that are still alive today with porb < 4")),
             'seed': _("random seed"),
             'neta': _(mark_safe("<b>NETA</b>: neta is the Reimers mass-loss coefficent (neta;4x10^-13: 0.5 normally).")),
