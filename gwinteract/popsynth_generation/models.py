@@ -37,7 +37,7 @@ class NewPopSynthModel(models.Model):
     mass_transfer_white_dwarf_to_co = models.BooleanField(default=False)
     select_final_state = models.BooleanField(default=True)
     binary_state = ArrayField(models.IntegerField(), default=return_list((0,1,2)))
-    merger_type = ArrayField(models.CharField(max_length=4), default=return_list(('-001','1313', '1314', '1413', '1414')))
+    lisa_sources = models.BooleanField(default=False)
 
     # convergence
     lisa_convergence = models.BooleanField(default=False)
@@ -113,7 +113,7 @@ class NewPopSynthModel(models.Model):
     merger = models.FloatField(default=0)
     windflag = models.FloatField(default=3)
     natal_kick_array = ArrayField(models.FloatField(),
-                       default=return_list((0.0,0.0,0.0,0.0,0.0,0.0)))
+                       default=return_list((-100.0,-100.0,-100.0,-100.0,-100.0,-100.0)))
     qcrit_array = ArrayField(models.FloatField(),
                        default=return_list((0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0)))
     ppsn = models.IntegerField(default=1)
