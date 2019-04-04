@@ -68,7 +68,7 @@ class NewPopSynthModel(models.Model):
     # wdflag > 0 uses modified-Mestel cooling for WDs (0).
     wdflag = models.FloatField(default=0)
     # bhflag > 0 allows velocity kick at BH formation (0).
-    bhflag = models.FloatField(default=1)
+    bhflag = models.FloatField(default=3)
     # nsflag > 0 takes NS/BH mass from Belczynski et al. 2002, ApJ, 572, 407 (1).
     nsflag = models.FloatField(default=3)
     # mxns is the maximum NS mass (1.8, nsflag=0; 3.0, nsflag=1).
@@ -85,7 +85,7 @@ class NewPopSynthModel(models.Model):
     # ecsnp>0 turns on ECSN and also sets the maximum ECSN mass range (mass at the time of the SN; BSE=st=2.25, Pod=2.5)
     ecsnp = models.FloatField(default=2.5)
     # ecsn_mlow sets the low end of the ECSN mass range (BSE=1.6, Pod=1.4, StarTrack=1.85)
-    ecsn_mlow = models.FloatField(default=1.6)
+    ecsn_mlow = models.FloatField(default=1.4)
     # aic is set to 1 for the inclusion of AIC low kicks (even if ecsnp=0), set to 0 if off
     aic = models.FloatField(default=1.0)
     # sigma is the dispersion in the Maxwellian for the SN kick speed (190 km/s).
