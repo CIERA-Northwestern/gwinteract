@@ -56,13 +56,13 @@ class PopSynthForm(forms.Form):
                               engine)
     MODEL_CHOICES = tuple(zip(models.table_schema.values , models.table_schema.values))
 
-    columns = pandas.read_sql('SELECT * FROM {0}.{1} LIMIT 1'.format(MODEL_CHOICES[0][0], TABLE_CHOICES[0][0]), engine).keys()
+    columns = pandas.read_sql('SELECT * FROM \"{0}\".{1} LIMIT 1'.format(MODEL_CHOICES[0][0], TABLE_CHOICES[0][0]), engine).keys()
     COLUMN_CHOICES = tuple(zip(columns, columns))
 
-    binary_state = pandas.read_sql('SELECT DISTINCT(bin_state) FROM {0}.{1}'.format(MODEL_CHOICES[0][0], TABLE_CHOICES[0][0]), engine).bin_state.values
+    binary_state = pandas.read_sql('SELECT DISTINCT(bin_state) FROM \"{0}\".{1}'.format(MODEL_CHOICES[0][0], TABLE_CHOICES[0][0]), engine).bin_state.values
     BINARY_STATE_CHOICES = tuple(zip(binary_state, binary_state))
 
-    merger_types = pandas.read_sql('SELECT DISTINCT(merger_type) FROM {0}.{1}'.format(MODEL_CHOICES[0][0], TABLE_CHOICES[0][0]), engine).merger_type.values
+    merger_types = pandas.read_sql('SELECT DISTINCT(merger_type) FROM \"{0}\".{1}'.format(MODEL_CHOICES[0][0], TABLE_CHOICES[0][0]), engine).merger_type.values
     MERGER_TYPES_CHOICES = tuple(zip(merger_types, merger_types))
 
     engine.dispose()
