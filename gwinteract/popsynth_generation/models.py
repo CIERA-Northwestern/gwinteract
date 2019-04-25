@@ -36,7 +36,7 @@ class NewPopSynthModel(models.Model):
     # Filters
     mass_transfer_white_dwarf_to_co = models.BooleanField(default=False)
     select_final_state = models.BooleanField(default=True)
-    binary_state = ArrayField(models.IntegerField(), default=return_list((0,1,2)))
+    binary_state = ArrayField(models.IntegerField(), default=return_list((0,1)))
     lisa_sources = models.BooleanField(default=False)
 
     # convergence
@@ -68,7 +68,7 @@ class NewPopSynthModel(models.Model):
     # wdflag > 0 uses modified-Mestel cooling for WDs (0).
     wdflag = models.FloatField(default=0)
     # bhflag > 0 allows velocity kick at BH formation (0).
-    bhflag = models.FloatField(default=3)
+    bhflag = models.FloatField(default=1)
     # nsflag > 0 takes NS/BH mass from Belczynski et al. 2002, ApJ, 572, 407 (1).
     nsflag = models.FloatField(default=3)
     # mxns is the maximum NS mass (1.8, nsflag=0; 3.0, nsflag=1).
